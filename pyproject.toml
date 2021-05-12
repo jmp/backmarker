@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "backmarker"
+version = "0.1.0"
+description = ""
+authors = ["Jarkko Piiroinen <183207+jmp@users.noreply.github.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Django = "^3.2.2"
+djangorestframework = "^3.12.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+flake8 = "^3.9.2"
+black = "^21.5b1"
+isort = "^5.8.0"
+mypy = "^0.812"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
