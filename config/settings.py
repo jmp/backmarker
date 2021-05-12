@@ -55,7 +55,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "backmarker.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
 
 
 # Database
