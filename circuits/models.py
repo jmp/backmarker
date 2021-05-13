@@ -9,7 +9,7 @@ class Circuit(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     altitude = models.IntegerField()
-    url = models.URLField(unique=True)
+    wiki_url = models.URLField(db_column="url", unique=True)
 
     def __str__(self):
         return self.name
