@@ -9,4 +9,4 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns.append(path("admin/", admin.site.urls))
+    urlpatterns += [path("admin/", admin.site.urls)]
