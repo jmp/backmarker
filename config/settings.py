@@ -12,6 +12,8 @@ INSTALLED_APPS = [
     "drivers",
     "seasons",
     "statuses",
+    "races",
+    "constructors",
 ]
 
 REST_FRAMEWORK = {
