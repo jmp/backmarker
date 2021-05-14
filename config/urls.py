@@ -1,12 +1,13 @@
-from django.conf import settings
-from django.contrib import admin
 from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-from circuits import urls as circuits_urls
+from circuits.urls import router as circuits_router
+from drivers.urls import router as drivers_router
+
+router = DefaultRouter()
+router.registry.extend(circuits_router.registry)
+router.registry.extend(drivers_router.registry)
 
 urlpatterns = [
-    path("api/", include((circuits_urls, "circuits"), namespace="circuits")),
+    path("api/", include(router.urls)),
 ]
-
-if settings.DEBUG:
-    urlpatterns += [path("admin/", admin.site.urls)]
