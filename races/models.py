@@ -9,7 +9,7 @@ class Race(models.Model):
     circuit = models.ForeignKey(Circuit, models.PROTECT)
     name = models.CharField(max_length=255)
     date = models.DateField()
-    time = models.TimeField()
+    time = models.TimeField(null=True)
     wiki_url = models.URLField(db_column="url", unique=True)
 
     def __str__(self):
