@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = bool(os.environ.get("DEBUG", False))
 SECRET_KEY = os.environ.get("SECRET_KEY", "super secret" if DEBUG else "")
