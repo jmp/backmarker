@@ -11,6 +11,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "circuits",
     "drivers",
+    "seasons",
 ]
 
 REST_FRAMEWORK = {
