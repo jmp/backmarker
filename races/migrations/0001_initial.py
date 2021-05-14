@@ -9,21 +9,35 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('circuits', '0001_initial'),
+        ("circuits", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Race',
+            name="Race",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year', models.IntegerField()),
-                ('round', models.IntegerField()),
-                ('circuit', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='circuits.circuit')),
-                ('name', models.CharField(max_length=255)),
-                ('date', models.DateField()),
-                ('time', models.TimeField()),
-                ('wiki_url', models.URLField(db_column='url', unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year", models.IntegerField()),
+                ("round", models.IntegerField()),
+                (
+                    "circuit",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="circuits.circuit",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("date", models.DateField()),
+                ("time", models.TimeField()),
+                ("wiki_url", models.URLField(db_column="url", unique=True)),
             ],
         ),
     ]

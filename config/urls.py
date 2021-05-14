@@ -8,6 +8,7 @@ from statuses.urls import router as statuses_router
 from races.urls import router as races_router
 from constructors.urls import router as constructors_router
 from results.urls import router as results_router
+from qualifyings.urls import router as qualifyings_router
 
 router = DefaultRouter()
 router.registry.extend(circuits_router.registry)
@@ -17,6 +18,7 @@ router.registry.extend(statuses_router.registry)
 router.registry.extend(races_router.registry)
 router.registry.extend(constructors_router.registry)
 router.registry.extend(results_router.registry)
+router.registry.extend(qualifyings_router.registry)
 
 urlpatterns = [
     path("api/", include(router.urls)),

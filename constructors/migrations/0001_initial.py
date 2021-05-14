@@ -7,18 +7,25 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Constructor',
+            name="Constructor",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('reference', models.CharField(max_length=255, unique=True)),
-                ('name', models.CharField(max_length=255)),
-                ('nationality', models.CharField(max_length=255)),
-                ('wiki_url', models.URLField(db_column='url')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("reference", models.CharField(max_length=255, unique=True)),
+                ("name", models.CharField(max_length=255)),
+                ("nationality", models.CharField(max_length=255)),
+                ("wiki_url", models.URLField(db_column="url")),
             ],
         ),
     ]
