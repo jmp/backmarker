@@ -14,7 +14,7 @@ class AutoSchema(openapi.AutoSchema):
         if self.view.action == "list":
             return f"Get list of {self._get_verbose_name_plural()}"
         if self.view.action == "retrieve":
-            return f"Get {self._get_verbose_name()}"
+            return f"Get a {self._get_verbose_name()}"
         return super().get_summary()
 
     def _get_verbose_name(self):
