@@ -19,7 +19,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [],
     "DEFAULT_PERMISSION_CLASSES": [],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_SCHEMA_CLASS": "config.openapi.AutoSchema",
     "PAGE_SIZE": 25,
     "UNAUTHENTICATED_USER": None,
 }
@@ -28,6 +28,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Backmarker REST API",
     "DESCRIPTION": "A basic REST API for F1 data.",
     "VERSION": "0.1.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 if DEBUG:
