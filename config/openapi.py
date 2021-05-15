@@ -4,6 +4,18 @@ from drf_spectacular import openapi
 
 
 class AutoSchema(openapi.AutoSchema):
+    def _get_response_bodies(self):
+        defaults = {
+            "200": {"description": "OK"},
+            "400": {"description": "Bad Request"},
+            "405": {"description": "Method Not Allowed"},
+            "500": {"description": "Internal Error"},
+        }
+        if self.view.action != "list":
+            defaults["404"] = {"description": "Not Found"}
+        defaults.update(super()._get_response_bodies())
+        return defaults
+
     def get_tags(self) -> List[str]:
         try:
             return [self._get_verbose_name_plural().capitalize()]
