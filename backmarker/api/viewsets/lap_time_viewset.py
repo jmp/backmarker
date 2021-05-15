@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from backmarker.models.lap_time import LapTime
 from backmarker.api.serializers.lap_time_serializer import LapTimeSerializer
+from backmarker.models.lap_time import LapTime
 
 
 class LapTimeViewSet(ReadOnlyModelViewSet):

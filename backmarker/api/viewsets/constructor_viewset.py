@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from backmarker.models.constructor import Constructor
 from backmarker.api.serializers.constructor_serializer import ConstructorSerializer
+from backmarker.models.constructor import Constructor
 
 
 class ConstructorViewSet(ReadOnlyModelViewSet):

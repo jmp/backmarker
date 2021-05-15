@@ -4,7 +4,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = bool(os.environ.get("DEBUG", False))
 SECRET_KEY = os.environ.get("SECRET_KEY", "super secret" if DEBUG else "")
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1 0.0.0.0 localhost").split(" ")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1 0.0.0.0 localhost").split(
+    " "
+)
 
 INSTALLED_APPS = [
     "rest_framework",
@@ -12,9 +14,7 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_RENDERER_CLASSES": (
-        "rest_framework.renderers.JSONRenderer",
-    ),
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),

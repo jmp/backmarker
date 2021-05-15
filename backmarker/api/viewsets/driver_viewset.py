@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from backmarker.models.driver import Driver
 from backmarker.api.serializers.driver_serializer import DriverSerializer
+from backmarker.models.driver import Driver
 
 
 class DriverViewSet(ReadOnlyModelViewSet):

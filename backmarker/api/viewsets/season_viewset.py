@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from backmarker.models.season import Season
 from backmarker.api.serializers.season_serializer import SeasonSerializer
+from backmarker.models.season import Season
 
 
 class SeasonViewSet(ReadOnlyModelViewSet):

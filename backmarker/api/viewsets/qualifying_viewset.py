@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from backmarker.models.qualifying import Qualifying
 from backmarker.api.serializers.qualifying_serializer import QualifyingSerializer
+from backmarker.models.qualifying import Qualifying
 
 
 class QualifyingViewSet(ReadOnlyModelViewSet):

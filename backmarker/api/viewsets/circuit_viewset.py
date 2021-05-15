@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from backmarker.models.circuit import Circuit
 from backmarker.api.serializers.circuit_serializer import CircuitSerializer
+from backmarker.models.circuit import Circuit
 
 
 class CircuitViewSet(ReadOnlyModelViewSet):

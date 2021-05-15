@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from backmarker.models.status import Status
 from backmarker.api.serializers.status_serializer import StatusSerializer
+from backmarker.models.status import Status
 
 
 class StatusViewSet(ReadOnlyModelViewSet):

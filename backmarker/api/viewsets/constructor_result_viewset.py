@@ -1,7 +1,9 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
+from backmarker.api.serializers.constructor_result_serializer import (
+    ConstructorResultSerializer,
+)
 from backmarker.models.constructor_result import ConstructorResult
-from backmarker.api.serializers.constructor_result_serializer import ConstructorResultSerializer
 
 
 class ConstructorResultViewSet(ReadOnlyModelViewSet):
