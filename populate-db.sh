@@ -36,6 +36,7 @@ zcat < mysql_dump.sql.gz | \
   sed -e "s/\"status\"/\"$TABLE_STATUSES\"/" \
   > tmp.sql
 
+rm -f mysql_dump.sql.gz
 OUT_FILE=populate.sql
 rm -f $OUT_FILE
 touch $OUT_FILE
@@ -51,9 +52,24 @@ echo "TRUNCATE TABLE \"$TABLE_CONSTRUCTOR_STANDINGS\" CASCADE;" >> $OUT_FILE
 echo "TRUNCATE TABLE \"$TABLE_LAP_TIMES\" CASCADE;" >> $OUT_FILE
 echo "TRUNCATE TABLE \"$TABLE_DRIVER_STANDINGS\" CASCADE;" >> $OUT_FILE
 
+cat tmp.sql | grep "\"${TABLE_PREFIX}circuit\"" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}driver\"" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}constructor\"" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}season\"" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}status\"" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}race\"" >> $OUT_FILE   
+cat tmp.sql | grep "\"${TABLE_PREFIX}constructorresult\"" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}constructorstanding\"" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}laptime\""| sed "s/VALUES (/VALUES ((SELECT COALESCE(MAX(id)+1, 0) FROM $TABLE_LAP_TIMES),/" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}driverstanding\"" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}pitstop\""| sed "s/VALUES (/VALUES ((SELECT COALESCE(MAX(id)+1, 0) FROM $TABLE_PIT_STOPS),/" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}qualifying\"" >> $OUT_FILE
+cat tmp.sql | grep "\"${TABLE_PREFIX}result\"" >> $OUT_FILE   
+
+rm -f tmp.sql
+
 DATABASE_HOST=localhost
 DATABASE_USER=postgres
-DATABASE_PASSWORD=postgres
 DATABASE_NAME=postgres
 
 cat $OUT_FILE | psql -h $DATABASE_HOST -U $DATABASE_USER -d $DATABASE_NAME -q -b
