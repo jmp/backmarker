@@ -4,21 +4,17 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = bool(os.environ.get("DEBUG", False))
 SECRET_KEY = os.environ.get("SECRET_KEY", "super secret" if DEBUG else "")
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1 localhost").split(" ")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1 0.0.0.0 localhost").split(" ")
 
 INSTALLED_APPS = [
     "rest_framework",
-    "circuits",
-    "drivers",
-    "seasons",
-    "statuses",
-    "races",
-    "constructors",
-    "results",
-    "qualifyings",
+    "backmarker",
 ]
 
 REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+    ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),
@@ -30,10 +26,9 @@ REST_FRAMEWORK = {
 if DEBUG:
     # For django-rest-framework stylesheets, etc.
     INSTALLED_APPS += ["django.contrib.staticfiles"]
-else:
-    # Disable django-rest-framework browsable API
-    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = (
-        "rest_framework.renderers.JSONRenderer",
+    # Browsable API for debugging
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] += (
+        "rest_framework.renderers.BrowsableAPIRenderer",
     )
 
 MIDDLEWARE = ["django.middleware.security.SecurityMiddleware"]
