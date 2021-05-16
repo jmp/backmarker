@@ -1,77 +1,71 @@
 #!/bin/sh -e
 
-DUMP_URL=http://ergast.com/downloads/f1db_ansi.sql.gz
+# Download and extract CSV files
+CSV_URL=http://ergast.com/downloads/f1db_csv.zip
+CSV_FILE=f1db_csv.zip
+CSV_DIR=$(PWD)/csv
+curl $CSV_URL > $CSV_FILE
+rm -rf $CSV_DIR
+unzip $CSV_FILE -d $CSV_DIR
+rm -f $CSV_FILE
 
-TABLE_PREFIX=backmarker_
-TABLE_CIRCUITS=${TABLE_PREFIX}circuit
-TABLE_CONSTRUCTOR_RESULTS=${TABLE_PREFIX}constructorresult
-TABLE_CONSTRUCTOR_STANDINGS=${TABLE_PREFIX}constructorstanding
-TABLE_CONSTRUCTORS=${TABLE_PREFIX}constructor
-TABLE_DRIVER_STANDINGS=${TABLE_PREFIX}driverstanding
-TABLE_DRIVERS=${TABLE_PREFIX}driver
-TABLE_LAP_TIMES=${TABLE_PREFIX}laptime
-TABLE_PIT_STOPS=${TABLE_PREFIX}pitstop
-TABLE_QUALIFYINGS=${TABLE_PREFIX}qualifying
-TABLE_RACES=${TABLE_PREFIX}race
-TABLE_RESULTS=${TABLE_PREFIX}result
-TABLE_SEASONS=${TABLE_PREFIX}season
-TABLE_STATUSES=${TABLE_PREFIX}status
+# Remove header line from each file
+for f in csv/*.csv; do
+  tail -n +2 $f > $f.tmp
+  mv $f.tmp $f
+done
 
-curl -o mysql_dump.sql.gz $DUMP_URL
-zcat < mysql_dump.sql.gz | \
-  sed -e "s/\\\'/''/" | \
-  sed -e '/^CREATE/,/;$/c\' | \
-  sed -e "s/\"circuits\"/\"$TABLE_CIRCUITS\"/" | \
-  sed -e "s/\"constructorResults\"/\"$TABLE_CONSTRUCTOR_RESULTS\"/" | \
-  sed -e "s/\"constructorStandings\"/\"$TABLE_CONSTRUCTOR_STANDINGS\"/" | \
-  sed -e "s/\"constructors\"/\"$TABLE_CONSTRUCTORS\"/" | \
-  sed -e "s/\"driverStandings\"/\"$TABLE_DRIVER_STANDINGS\"/" | \
-  sed -e "s/\"drivers\"/\"$TABLE_DRIVERS\"/" | \
-  sed -e "s/\"lapTimes\"/\"$TABLE_LAP_TIMES\"/" | \
-  sed -e "s/\"pitStops\"/\"$TABLE_PIT_STOPS\"/" | \
-  sed -e "s/\"qualifying\"/\"$TABLE_QUALIFYINGS\"/" | \
-  sed -e "s/\"races\"/\"$TABLE_RACES\"/" | \
-  sed -e "s/\"results\"/\"$TABLE_RESULTS\"/" | \
-  sed -e "s/\"seasons\"/\"$TABLE_SEASONS\"/" | \
-  sed -e "s/\"status\"/\"$TABLE_STATUSES\"/" \
-  > tmp.sql
+# For lap times and pit stops, we have to enumerate the lines
+sed = $CSV_DIR/lap_times.csv | sed 'N;s/\n/,/' > tmp && mv tmp $CSV_DIR/lap_times.csv
+sed = $CSV_DIR/pit_stops.csv | sed 'N;s/\n/,/' > tmp && mv tmp $CSV_DIR/pit_stops.csv
 
-rm -f mysql_dump.sql.gz
-OUT_FILE=populate.sql
-rm -f $OUT_FILE
-touch $OUT_FILE
+TABLE_CIRCUITS=backmarker_circuit
+TABLE_CONSTRUCTOR_RESULTS=backmarker_constructorresult
+TABLE_CONSTRUCTOR_STANDINGS=backmarker_constructorstanding
+TABLE_CONSTRUCTORS=backmarker_constructor
+TABLE_DRIVER_STANDINGS=backmarker_driverstanding
+TABLE_DRIVERS=backmarker_driver
+TABLE_LAP_TIMES=backmarker_laptime
+TABLE_PIT_STOPS=backmarker_pitstop
+TABLE_QUALIFYINGS=backmarker_qualifying
+TABLE_RACES=backmarker_race
+TABLE_RESULTS=backmarker_result
+TABLE_SEASONS=backmarker_season
+TABLE_STATUSES=backmarker_status
 
-echo "TRUNCATE TABLE \"$TABLE_CIRCUITS\" CASCADE;" >> $OUT_FILE
-echo "TRUNCATE TABLE \"$TABLE_DRIVERS\" CASCADE;" >> $OUT_FILE
-echo "TRUNCATE TABLE \"$TABLE_CONSTRUCTORS\" CASCADE;" >> $OUT_FILE
-echo "TRUNCATE TABLE \"$TABLE_SEASONS\" CASCADE;" >> $OUT_FILE
-echo "TRUNCATE TABLE \"$TABLE_STATUSES\" CASCADE;" >> $OUT_FILE
-echo "TRUNCATE TABLE \"$TABLE_RACES\" CASCADE;" >> $OUT_FILE
-echo "TRUNCATE TABLE \"$TABLE_CONSTRUCTOR_RESULTS\" CASCADE;" >> $OUT_FILE
-echo "TRUNCATE TABLE \"$TABLE_CONSTRUCTOR_STANDINGS\" CASCADE;" >> $OUT_FILE
-echo "TRUNCATE TABLE \"$TABLE_LAP_TIMES\" CASCADE;" >> $OUT_FILE
-echo "TRUNCATE TABLE \"$TABLE_DRIVER_STANDINGS\" CASCADE;" >> $OUT_FILE
+DATABASE_HOST=${DATABASE_HOST:-"localhost"}
+DATABASE_USER=${DATABASE_USER:-"postgres"}
+DATABASE_NAME=${DATABASE_NAME:-"postgres"}
 
-cat tmp.sql | grep "\"${TABLE_PREFIX}circuit\"" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}driver\"" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}constructor\"" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}season\"" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}status\"" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}race\"" >> $OUT_FILE   
-cat tmp.sql | grep "\"${TABLE_PREFIX}constructorresult\"" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}constructorstanding\"" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}laptime\""| sed "s/VALUES (/VALUES ((SELECT COALESCE(MAX(id)+1, 0) FROM $TABLE_LAP_TIMES),/" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}driverstanding\"" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}pitstop\""| sed "s/VALUES (/VALUES ((SELECT COALESCE(MAX(id)+1, 0) FROM $TABLE_PIT_STOPS),/" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}qualifying\"" >> $OUT_FILE
-cat tmp.sql | grep "\"${TABLE_PREFIX}result\"" >> $OUT_FILE   
+psql -h $DATABASE_HOST -U $DATABASE_USER -d $DATABASE_NAME <<EOF
+SET client_min_messages TO WARNING;
 
-rm -f tmp.sql
+TRUNCATE TABLE "$TABLE_CIRCUITS" CASCADE;
+TRUNCATE TABLE "$TABLE_DRIVERS" CASCADE;
+TRUNCATE TABLE "$TABLE_CONSTRUCTORS" CASCADE;
+TRUNCATE TABLE "$TABLE_SEASONS" CASCADE;
+TRUNCATE TABLE "$TABLE_STATUSES" CASCADE;
+TRUNCATE TABLE "$TABLE_RACES" CASCADE;
+TRUNCATE TABLE "$TABLE_CONSTRUCTOR_RESULTS" CASCADE;
+TRUNCATE TABLE "$TABLE_CONSTRUCTOR_STANDINGS" CASCADE;
+TRUNCATE TABLE "$TABLE_LAP_TIMES" CASCADE;
+TRUNCATE TABLE "$TABLE_DRIVER_STANDINGS" CASCADE;
+TRUNCATE TABLE "$TABLE_PIT_STOPS" CASCADE;
+TRUNCATE TABLE "$TABLE_QUALIFYINGS" CASCADE;
 
-DATABASE_HOST=localhost
-DATABASE_USER=postgres
-DATABASE_NAME=postgres
+\\COPY $TABLE_CIRCUITS FROM '$CSV_DIR/circuits.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_DRIVERS FROM '$CSV_DIR/drivers.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_CONSTRUCTORS FROM '$CSV_DIR/constructors.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_SEASONS FROM '$CSV_DIR/seasons.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_STATUSES FROM '$CSV_DIR/status.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_RACES FROM '$CSV_DIR/races.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_CONSTRUCTOR_RESULTS FROM '$CSV_DIR/constructor_results.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_CONSTRUCTOR_STANDINGS FROM '$CSV_DIR/constructor_standings.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_LAP_TIMES FROM '$CSV_DIR/lap_times.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_DRIVER_STANDINGS FROM '$CSV_DIR/driver_standings.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_PIT_STOPS FROM '$CSV_DIR/pit_stops.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_QUALIFYINGS FROM '$CSV_DIR/qualifying.csv' WITH (FORMAT CSV, NULL '\\N');
+\\COPY $TABLE_RESULTS FROM '$CSV_DIR/results.csv' WITH (FORMAT CSV, NULL '\\N');
+EOF
 
-cat $OUT_FILE | psql -h $DATABASE_HOST -U $DATABASE_USER -d $DATABASE_NAME -q -b
-
-rm -f $OUT_FILE
+rm -rf $CSV_DIR
