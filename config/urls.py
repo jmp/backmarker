@@ -9,6 +9,10 @@ router.registry.extend(backmarker_router.registry)
 
 urlpatterns = [
     path("api/", include(router.urls)),
-    path("api/schema/", SpectacularAPIView.as_view(), name='schema'),
-    path("api/schema/redoc/", SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/schema/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
+    ),
 ]
