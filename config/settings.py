@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
@@ -64,6 +65,9 @@ DATABASES = {
         "PASSWORD": os.environ.get("DATABASE_PASSWORD", "postgres"),
     }
 }
+
+if "test" in sys.argv or "pytest" in sys.argv[0]:
+    DATABASES["default"] = {"ENGINE": "django.db.backends.sqlite3"}
 
 TIME_ZONE = "UTC"
 USE_I18N = False
