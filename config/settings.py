@@ -31,6 +31,7 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "A basic REST API for F1 data.",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    "SCHEMA_PATH_PREFIX": "/api",
 }
 
 if DEBUG:
