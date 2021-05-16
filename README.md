@@ -19,9 +19,17 @@ Some facts:
 1. Install [Poetry](https://python-poetry.org)
 2. Create a virtual environment and activate it
 3. Run `poetry install` to install all the dependencies
-4. Set up PostgreSQL either via the package manager or using `docker compose up db`
+4. Set up PostgreSQL with e.g. `docker compose up db`
 5. Run `python manage.py migrate`
-6. Run `./populate-db.sh` to populate the database (you may need to modify the credentials)
+
+## Populating the database
+
+To fill the database with some data, you can use the `populate-db.sh` script in the repository.
+It is a very basic script that downloads the latest Ergast MySQL database dump and attempts to
+convert it such that the rows can be inserted to the PostgreSQL database.
+
+You may need to modify the credentials in the script if you are not using Docker Compose to run
+the database.
 
 ## Running with Docker Compose
 
