@@ -39,7 +39,7 @@ if DEBUG:
     # For django-rest-framework stylesheets, etc.
     INSTALLED_APPS += ["django.contrib.staticfiles"]
     # Browsable API for debugging
-    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] += (
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] += (  # type: ignore
         "rest_framework.renderers.BrowsableAPIRenderer",
     )
 
