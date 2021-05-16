@@ -4,20 +4,21 @@
 CSV_URL=http://ergast.com/downloads/f1db_csv.zip
 CSV_FILE=f1db_csv.zip
 CSV_DIR=$(PWD)/csv
+
 curl $CSV_URL > $CSV_FILE
-rm -rf $CSV_DIR
-unzip $CSV_FILE -d $CSV_DIR
+rm -rf "$CSV_DIR"
+unzip $CSV_FILE -d "$CSV_DIR"
 rm -f $CSV_FILE
 
 # Remove header line from each file
 for f in csv/*.csv; do
-  tail -n +2 $f > $f.tmp
-  mv $f.tmp $f
+  tail -n +2 "$f" > "$f.tmp"
+  mv "$f.tmp" "$f"
 done
 
 # For lap times and pit stops, we have to enumerate the lines
-sed = $CSV_DIR/lap_times.csv | sed 'N;s/\n/,/' > tmp && mv tmp $CSV_DIR/lap_times.csv
-sed = $CSV_DIR/pit_stops.csv | sed 'N;s/\n/,/' > tmp && mv tmp $CSV_DIR/pit_stops.csv
+sed "=" "$CSV_DIR/lap_times.csv" | sed 'N;s/\n/,/' > tmp && mv tmp "$CSV_DIR/lap_times.csv"
+sed "=" "$CSV_DIR/pit_stops.csv" | sed 'N;s/\n/,/' > tmp && mv tmp "$CSV_DIR/pit_stops.csv"
 
 TABLE_CIRCUITS=backmarker_circuit
 TABLE_CONSTRUCTOR_RESULTS=backmarker_constructorresult
@@ -37,7 +38,7 @@ DATABASE_HOST=${DATABASE_HOST:-"localhost"}
 DATABASE_USER=${DATABASE_USER:-"postgres"}
 DATABASE_NAME=${DATABASE_NAME:-"postgres"}
 
-psql -h $DATABASE_HOST -U $DATABASE_USER -d $DATABASE_NAME <<EOF
+psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -d "$DATABASE_NAME" <<EOF
 SET client_min_messages TO WARNING;
 
 TRUNCATE TABLE "$TABLE_CIRCUITS" CASCADE;
@@ -68,4 +69,4 @@ TRUNCATE TABLE "$TABLE_QUALIFYINGS" CASCADE;
 \\COPY $TABLE_RESULTS FROM '$CSV_DIR/results.csv' WITH (FORMAT CSV, NULL '\\N');
 EOF
 
-rm -rf $CSV_DIR
+rm -rf "$CSV_DIR"
