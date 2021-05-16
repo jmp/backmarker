@@ -18,9 +18,9 @@ ROUTES = [
 ]
 
 
-@pytest.mark.parametrize("route", ROUTES)
 @pytest.mark.django_db
-def test_circuits_api_validates_against_schema(client, route):
+@pytest.mark.parametrize("route", ROUTES)
+def test_list_api_validates_against_schema(client, route):
     response = client.get(f"/api/{route}/")
     assert response.status_code == 200
     schema_tester.validate_response(response)
